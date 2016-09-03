@@ -1,0 +1,84 @@
+---
+- hosts: pasta
+  vars:
+    daemons:
+      couchpotato: https://github.com/CouchPotato/CouchPotatoServer
+      sickrage: https://github.com/SickRage/SickRage
+      - headphones
+  tasks:
+    - name: Install packages
+      apt: name={{item}} update_cache=yes state=present
+      with_items:
+        - python
+        - git
+        - vim
+        - tmux
+        - transmission-daemon
+        - nginx
+
+    - name: Create mount point
+      file: name=/mnt/downloads state=directory
+
+    - name: Mount downloads dir
+      mount: name=/mnt/downloads fstype=ext4 src=LABEL=Downloads state=present
+
+    - name: Create downloads group
+      group: name=downloads gid=125 state=present
+
+    - name: Create daemon users
+      user: name={{item}} group=downloads home=/opt/{{item}} create_home=no
+
+    - name: Create admin user
+      user: name=admin groups=downloads,sudo create_home=yes
+        
+    - name: Put transmission in downloads group
+      user: name=debian-transmission groups=downloads append=yes
+      notify: restart transmission
+
+    - name: Create daemon dirs
+      file: name=/opt/{{item}} owner={{item}} grouop=downloads
+      with_items: "{{daemons}}"
+
+    - name: Install daemons
+      git: repo={{item.value}} dest=/opt/{{item.key}} accept_hostkey=yes
+      become_user: "{{item.key}}"
+      with_dict: "{{daemons}}"
+      notify: restart {{item.key}}
+
+    - name: Copy init scripts
+      copy: src=init/{{item}} dest=/etc/init.d/{{item}}
+      with_items: "{{daemons}}"
+      notify: restart {{item}}
+
+    - name: Copy daemon config
+      copy: src={{item}} dest=/etc/defaults/{{item|basename}}
+      with_fileglob:
+        - daemon_config/*
+      notify: restart {{item|basename}}
+
+    - name: Copy transmission config
+      copy: src=config/transmission.settings.json dest=/etc/transmission-daemon/settings.json owner=debian-transmission group=debian-transmission mode=0600
+      notfiy: restart transmission
+    
+    - name: Copy nginx site
+      copy: src=config/nginx_route.site dest=/etc/nginx/sites-available/route
+      notify: restart nginx
+
+    - name: Enable site
+      file: src=/etc/nginx/sites-available/route dest=/etc/nginx/sites-enabled/route state=link
+      notify: restart nginx
+
+    - name: Disable default nginx site
+      file: src=/etc/nginx/sites-enabled/default state=absent
+      notify: restart nginx
+  handlers:
+      - name: restart couchpotato
+        service: name=couchpotato enabled=yes state=restarted
+      - name: restart sickrage
+        service: name=sickrage enabled=yes state=restarted
+      - name: restart headphones
+        service: name=headphones enabled=yes state=restarted
+      - name: restart transmission
+        service: name=transmission-daemon enabled=yes state=restarted
+      - name: restart nginx
+        service: name=nginx enabled=yes state=restarted
