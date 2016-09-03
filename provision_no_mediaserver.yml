@@ -1,10 +1,11 @@
 ---
 - hosts: pasta
+  become: yes
   vars:
     daemons:
       couchpotato: https://github.com/CouchPotato/CouchPotatoServer
       sickrage: https://github.com/SickRage/SickRage
-      - headphones
+      headphones: https://github.com/rembo10/headphones.git
   tasks:
     - name: Install packages
       apt: name={{item}} update_cache=yes state=present
@@ -58,19 +59,23 @@
 
     - name: Copy transmission config
       copy: src=config/transmission.settings.json dest=/etc/transmission-daemon/settings.json owner=debian-transmission group=debian-transmission mode=0600
-      notfiy: restart transmission
+      notify: restart transmission
+      tags: transmission
     
     - name: Copy nginx site
       copy: src=config/nginx_route.site dest=/etc/nginx/sites-available/route
       notify: restart nginx
+      tags: nginx
 
     - name: Enable site
       file: src=/etc/nginx/sites-available/route dest=/etc/nginx/sites-enabled/route state=link
       notify: restart nginx
+      tags: nginx
 
     - name: Disable default nginx site
-      file: src=/etc/nginx/sites-enabled/default state=absent
+      file: path=/etc/nginx/sites-enabled/default state=absent
       notify: restart nginx
+      tags: nginx
   handlers:
       - name: restart couchpotato
         service: name=couchpotato enabled=yes state=restarted

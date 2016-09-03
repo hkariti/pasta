@@ -9,7 +9,7 @@ server {
         root /usr/share/nginx/html;
         index index.html index.htm;
 
-        server_name pasta.;
+#        server_name pasta.;
 
         location / {
                 proxy_set_header Upgrade $http_upgrade;
@@ -19,7 +19,7 @@ server {
         location /plex {
                 proxy_set_header Upgrade $http_upgrade;
                 proxy_set_header Connection $connection_upgrade;
-                proxy_pass http://localhost:32400/web;
+                proxy_pass http://$hostname:32400/web;
         }
         location /transmission {
                 proxy_set_header Upgrade $http_upgrade;
@@ -27,12 +27,12 @@ server {
                 proxy_pass http://localhost:9091;
         }
         location /couchpotato {
-                return 301 http://$server_name:5050;
+                return 301 http://$http_host:5050;
         }
         location /sickrage {
-                return 301 http://$server_name:8081;
+                return 301 http://$http_host:8081;
         }
         location /headphones {
-                return 301 http://$server_name:8181;
+                return 301 http://$http_host:8181;
         }
 }
