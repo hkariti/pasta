@@ -16,6 +16,7 @@
         - tmux
         - transmission-daemon
         - nginx
+        - avahi-daemon
 
     - name: Create mount point
       file: name=/mnt/downloads state=directory
