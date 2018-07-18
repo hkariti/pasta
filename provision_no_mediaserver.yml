@@ -17,6 +17,7 @@
         - transmission-daemon
         - nginx
         - avahi-daemon
+        - nodejs-legacy # sickrage searches need this
 
     - name: Create mount point
       file: name=/mnt/downloads state=directory
