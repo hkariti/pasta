@@ -1,0 +1,12 @@
+[Unit]
+Description=SickRage application instance
+After=network.target
+
+[Service]
+ExecStart=/opt/sickrage/SickBeard.py
+Type=simple
+User=sickrage
+Group=downloads
+
+[Install]
+WantedBy=multi-user.target

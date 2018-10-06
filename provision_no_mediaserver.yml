@@ -1,11 +1,11 @@
 ---
-- hosts: pasta
+- hosts: tv-h
   become: yes
   vars:
     daemons:
       couchpotato: https://github.com/CouchPotato/CouchPotatoServer
       sickrage: https://github.com/SickRage/SickRage
-      headphones: https://github.com/rembo10/headphones.git
+      #headphones: https://github.com/rembo10/headphones.git
   tasks:
     - name: Install packages
       apt: name={{item}} update_cache=yes state=present
@@ -29,17 +29,18 @@
       group: name=downloads gid=125 state=present
 
     - name: Create daemon users
-      user: name={{item}} group=downloads home=/opt/{{item}} create_home=no
+      user: name={{item}} group=downloads home=/opt/{{item}} createhome=no
+      with_items: "{{ daemons }}"
 
-    - name: Create admin user
-      user: name=admin groups=downloads,sudo create_home=yes
+      #    - name: Create admin user
+      #      user: name=admin groups=downloads,sudo createhome=yes
         
     - name: Put transmission in downloads group
       user: name=debian-transmission groups=downloads append=yes
       notify: restart transmission
 
     - name: Create daemon dirs
-      file: name=/opt/{{item}} owner={{item}} grouop=downloads
+      file: name=/opt/{{item}} owner={{item}} group=downloads state=directory
       with_items: "{{daemons}}"
 
     - name: Install daemons
@@ -49,14 +50,13 @@
       notify: restart {{item.key}}
 
     - name: Copy init scripts
-      copy: src=init/{{item}} dest=/etc/init.d/{{item}}
+      copy: src=init/{{item}}.service dest=/lib/systemd/system/
       with_items: "{{daemons}}"
       notify: restart {{item}}
 
     - name: Copy daemon config
-      copy: src={{item}} dest=/etc/defaults/{{item|basename}}
-      with_fileglob:
-        - daemon_config/*
+      copy: src={{item}} dest=/etc/default/{{item|basename}}
+      with_fileglob: 'deamon_config/*'
       notify: restart {{item|basename}}
 
     - name: Copy transmission config
@@ -83,8 +83,8 @@
         service: name=couchpotato enabled=yes state=restarted
       - name: restart sickrage
         service: name=sickrage enabled=yes state=restarted
-      - name: restart headphones
-        service: name=headphones enabled=yes state=restarted
+        #      - name: restart headphones
+        #        service: name=headphones enabled=yes state=restarted
       - name: restart transmission
         service: name=transmission-daemon enabled=yes state=restarted
       - name: restart nginx
