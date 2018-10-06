@@ -78,6 +78,10 @@
       file: path=/etc/nginx/sites-enabled/default state=absent
       notify: restart nginx
       tags: nginx
+
+    - name: Disable suspend on lid close
+      lineinfile: regexp=HandleLidSwitch= line="HandleLidSwitch=ignore" path=/etc/systemd/logind.conf
+      notify: restart logind
   handlers:
       - name: restart couchpotato
         service: name=couchpotato enabled=yes state=restarted
@@ -89,3 +93,5 @@
         service: name=transmission-daemon enabled=yes state=restarted
       - name: restart nginx
         service: name=nginx enabled=yes state=restarted
+      - name: restart logind
+        service: name=systemd-logind state=restarted
