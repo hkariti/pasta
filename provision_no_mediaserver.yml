@@ -1,6 +1,8 @@
 ---
 - hosts: tv-h
   become: yes
+  vars:
+    downloads_group: downloads
   tasks:
     - name: Install packages
       apt: name={{item}} update_cache=yes state=present
@@ -9,7 +11,6 @@
         - git
         - vim
         - tmux
-        - transmission-daemon
         - nginx
         - avahi-daemon
 
@@ -22,15 +23,6 @@
     - name: Create downloads group
       group: name=downloads gid=125 state=present
         
-    - name: Put transmission in downloads group
-      user: name=debian-transmission groups=downloads append=yes
-      notify: restart transmission
-
-    - name: Copy transmission config
-      copy: src=config/transmission.settings.json dest=/etc/transmission-daemon/settings.json owner=debian-transmission group=debian-transmission mode=0600
-      notify: restart transmission
-      tags: transmission
-    
     - name: Copy nginx site
       copy: src=config/nginx_route.site dest=/etc/nginx/sites-available/route
       notify: restart nginx
@@ -50,13 +42,13 @@
       lineinfile: regexp=HandleLidSwitch= line="HandleLidSwitch=ignore" path=/etc/systemd/logind.conf
       notify: restart logind
   roles:
+    - role: transmission
+      secondary_groups: "{{ downloads_group }}"
     - role: couchpotato
-      group: downloads
+      group: "{{ downloads_group }}"
     - role: sickrage
-      group: downloads
+      group: "{{ downloads_group }}"
   handlers:
-      - name: restart transmission
-        service: name=transmission-daemon enabled=yes state=restarted
       - name: restart nginx
         service: name=nginx enabled=yes state=restarted
       - name: restart logind
