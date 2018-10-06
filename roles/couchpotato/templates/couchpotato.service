@@ -3,10 +3,10 @@ Description=CouchPotato application instance
 After=network.target
 
 [Service]
-ExecStart=/opt/couchpotato/CouchPotato.py
+ExecStart={{homedir}}/CouchPotato.py
 Type=simple
-User=couchpotato
-Group=downloads
+User={{username}}
+Group={{group}}
 
 [Install]
 WantedBy=multi-user.target

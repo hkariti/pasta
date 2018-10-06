@@ -1,0 +1,4 @@
+---
+# handlers file for couchpotato
+- name: restart couchpotato
+  service: name=couchpotato enabled=yes state=restarted

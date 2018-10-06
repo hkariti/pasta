@@ -1,0 +1,6 @@
+---
+# vars file for couchpotato
+repo_url:  https://github.com/CouchPotato/CouchPotatoServer     
+homedir: /opt/couchpotato
+username: couchpotato
+group: couchpotato

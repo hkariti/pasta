@@ -1,0 +1,23 @@
+---
+# tasks file for sickrage
+- name: Install required packages
+  apt: name=nodejs-legacy state=present
+
+- name: Create user
+  user: name={{username}} group={{group}} home={{homedir}} craetehome=no
+
+- name: Create daemon dir
+  file: name={{homedir}} owner={{username}} group={{group}} state=directory
+
+- name: Install daemon
+  git: repo={{repo_url}} dest={{homedir}} accept_hostkey=yes
+  become_user: "{{username}}"
+  notify: restart sickrage
+
+- name: Install config file
+  copy: src=sickrage.conf dest=/etc/default/sickrage
+  notify: restart sickrage
+
+- name: Copy init script
+  template: sickrage.service dest=/lib/systemd/system/
+  notify: restart sickrage
