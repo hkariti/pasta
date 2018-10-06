@@ -35,4 +35,7 @@ server {
         location /headphones {
                 return 301 http://$http_host:8181;
         }
+        location /duplicati {
+                return 301 http://$http_host:8200;
+        }
 }
