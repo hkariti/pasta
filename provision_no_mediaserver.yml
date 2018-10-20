@@ -31,9 +31,6 @@
     - name: Create daemon users
       user: name={{item}} group=downloads home=/opt/{{item}} createhome=no
       with_items: "{{ daemons }}"
-
-      #    - name: Create admin user
-      #      user: name=admin groups=downloads,sudo createhome=yes
         
     - name: Put transmission in downloads group
       user: name=debian-transmission groups=downloads append=yes
