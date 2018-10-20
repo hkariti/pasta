@@ -1,0 +1,6 @@
+- name: Mount downloads dir
+  mount: name=/mnt/downloads fstype=ext4 src=LABEL=Downloads state=present
+
+# This group will own most of the files in the hdd, so the gid is important
+- name: Create owner group
+  group: name={{owner_group}} gid=125 state=present

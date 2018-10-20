@@ -13,17 +13,12 @@
         - tmux
         - avahi-daemon
 
-    - name: Mount downloads dir
-      mount: name=/mnt/downloads fstype=ext4 src=LABEL=Downloads state=present
-
-    - name: Create downloads group
-      group: name=downloads gid=125 state=present
-        
-
     - name: Disable suspend on lid close
       lineinfile: regexp=HandleLidSwitch= line="HandleLidSwitch=ignore" path=/etc/systemd/logind.conf
       notify: restart logind
   roles:
+    - role: external_hdd
+      owner_group: " {{ downloads_group }}"
     - role: transmission
       secondary_groups: "{{ downloads_group }}"
     - role: couchpotato
