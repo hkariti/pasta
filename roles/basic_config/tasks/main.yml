@@ -1,0 +1,12 @@
+- name: Install packages
+  apt: name={{item}} update_cache=yes state=present
+  with_items:
+    - python
+    - git
+    - vim
+    - tmux
+    - avahi-daemon
+    
+- name: Disable suspend on lid close
+  lineinfile: regexp=HandleLidSwitch= line="HandleLidSwitch=ignore" path=/etc/systemd/logind.conf
+  notify: restart logind
