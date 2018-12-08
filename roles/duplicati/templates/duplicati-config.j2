@@ -1,0 +1,9 @@
+# Defaults for duplicati initscript
+# sourced by /etc/init.d/duplicati
+ 
+#
+# This is a POSIX shell fragment
+#
+ 
+# Additional options that are passed to the Daemon.
+DAEMON_OPTS="--webservice-port={{listen_port}} --webservice-interface={{listen_interface}} {{extra_opts}}"

@@ -1,0 +1,39 @@
+---
+- block:
+  - name: Install requires packages
+    apt: name=unzip state=present
+
+  - name: Create group
+    group: name={{group}} gid={{group_id or omit}}
+
+  - name: Create user
+    user: name={{username}} uid={{user_id or omit}} group={{group}} home={{homedir}} createhome=yes
+
+  - name: Create install dir
+    file: path={{install_dir}} state=directory
+
+  - name: Download and Install duplicati
+    unarchive: src={{artifact_url}} remote_src=yes dest={{install_dir}} creates={{ omit if upgrade|bool else install_dir }}
+    notify: restart duplicati
+
+  - name: chmod +x exectuables
+    shell: find "{{install_dir}}" -name '*.sh' -o -name '*.exe' | xargs chmod a+x
+    notify: restart duplicati
+
+  - name: Install cli executables
+    template: src={{item}} dest=/usr/bin/{{item|splitext|first}} mode=0755
+    with_items:
+      - duplicati-server.j2
+      - duplicati-cli.j2
+
+  - name: copy config
+    template: src=duplicati-config.j2 dest=/etc/default/duplicati
+    notify: restart duplicati
+
+  - name: copy systemd service
+    copy: src=duplicati@.service dest=/etc/systemd/system/
+    notify: restart duplicati
+
+  - name: Start duplicati
+    service: name=duplicati@{{username}} state=started enabled=yes
+  tags: duplicati

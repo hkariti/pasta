@@ -1,0 +1,3 @@
+---
+- name: restart duplicati
+  service: name=duplicati@{{username}} state=restarted enabled=yes

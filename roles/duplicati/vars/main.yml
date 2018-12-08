@@ -1,0 +1,14 @@
+---
+username: duplicati
+user_id: 0 # Dont override uid by default
+group: duplicati
+group_id: 0 # Dont override gid by default
+homedir: /var/lib/duplicati
+
+artifact_url: "https://github.com/duplicati/duplicati/releases/download/v2.0.4.5-2.0.4.5_beta_2018-11-28/duplicati-2.0.4.5_beta_2018-11-28.zip"
+install_dir: /usr/lib/duplicati
+upgrade: false
+
+listen_port: 8200
+listen_interface: any
+extra_opts: ""

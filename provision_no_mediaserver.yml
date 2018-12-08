@@ -6,11 +6,14 @@
   roles:
     - basic_config
     - role: external_hdd
-      owner_group: " {{ downloads_group }}"
+      owner_group: "{{ downloads_group }}"
     - role: transmission
       secondary_groups: "{{ downloads_group }}"
     - role: couchpotato
       group: "{{ downloads_group }}"
     - role: sickrage
       group: "{{ downloads_group }}"
+    - role: duplicati
+      extra_opts: "--webservice-allowed-hostnames=*"
+      group_id: 1006
     - nginx

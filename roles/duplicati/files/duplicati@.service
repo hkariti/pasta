@@ -1,0 +1,11 @@
+[Unit]
+Description=Duplicati web-server
+After=network.target
+
+[Service]
+User=%I
+EnvironmentFile=-/etc/default/duplicati
+ExecStart=/usr/bin/duplicati-server $DAEMON_OPTS
+
+[Install]
+WantedBy=multi-user.target
