@@ -5,7 +5,7 @@
 
 - name: Put transmission in downloads group
   user: name=debian-transmission groups={{secondary_groups}} append=yes
-  when: secondary_groups
+  when: (secondary_groups)
   notify: restart transmission
 
 - name: Copy transmission config

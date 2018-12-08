@@ -1,1 +1,1 @@
-tv-h   ansible_host=192.168.1.11 ansible_user=tvh
+tv-h    ansible_user=tvh

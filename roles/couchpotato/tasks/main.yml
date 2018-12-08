@@ -1,7 +1,7 @@
 ---
 # tasks file for couchpotato
 - name: Create user
-  user: name={{username}} group={{group}} home={{homedir}} craetehome=no
+  user: name={{username}} group={{group}} home={{homedir}} createhome=no
 
 - name: Create daemon dir
   file: name={{homedir}} owner={{username}} group={{group}} state=directory
@@ -12,5 +12,5 @@
   notify: restart couchpotato
 
 - name: Copy init script
-  template: couchpotato.service dest=/lib/systemd/system/
+  template: src=couchpotato.service dest=/lib/systemd/system/
   notify: restart couchpotato
