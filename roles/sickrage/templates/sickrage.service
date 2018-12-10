@@ -3,7 +3,7 @@ Description=SickRage application instance
 After=network.target
 
 [Service]
-ExecStart={{homedir}}/SickBeard.py
+ExecStart={{homedir}}/SiCKRAGE.py
 Type=simple
 User={{username}}
 Group={{group}}

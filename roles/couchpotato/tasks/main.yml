@@ -1,16 +1,17 @@
 ---
-# tasks file for couchpotato
-- name: Create user
-  user: name={{username}} group={{group}} home={{homedir}} createhome=no
+- block:
+  - name: Create user
+    user: name={{username}} group={{group}} home={{homedir}} createhome=no
 
-- name: Create daemon dir
-  file: name={{homedir}} owner={{username}} group={{group}} state=directory
+  - name: Create daemon dir
+    file: name={{homedir}} owner={{username}} group={{group}} state=directory
 
-- name: Install daemon
-  git: repo={{repo_url}} dest={{homedir}} accept_hostkey=yes
-  become_user: "{{username}}"
-  notify: restart couchpotato
+  - name: Install daemon
+    git: repo={{repo_url}} dest={{homedir}} accept_hostkey=yes
+    become_user: "{{username}}"
+    notify: restart couchpotato
 
-- name: Copy init script
-  template: src=couchpotato.service dest=/lib/systemd/system/
-  notify: restart couchpotato
+  - name: Copy init script
+    template: src=couchpotato.service dest=/lib/systemd/system/
+    notify: restart couchpotato
+  tags: couchpotato
