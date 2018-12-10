@@ -17,6 +17,10 @@
     command: duc create --import-metadata backup /tmp/{{item}}
     with_items: "{{ backup_configs }}"
 
+  - name: Repair databases for configs
+    command: duc repair {{item.0 + 1}}
+    with_indexed_items: "{{ backup_configs }}"
+
   - name: Remove config files
     file: path=/tmp/{{item}} state=absent
     with_items: "{{ backup_configs }}"
