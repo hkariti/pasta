@@ -17,4 +17,9 @@
       extra_opts: "--webservice-allowed-hostnames=*"
       group_id: 1006
     - role: duplicati_config
+    - role: marvinpinto.plex
+      tags: plex
+    - role: plex_config
+      extra_groups: "{{ downloads_group }}"
+      tags: plex,plex_config
     - nginx

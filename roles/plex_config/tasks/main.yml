@@ -1,0 +1,4 @@
+---
+- name: Add plex to downloads group
+  user: name=plex append=yes groups={{extra_groups|default([])}}
+  notify: restart-ansible-role-plex
