@@ -1,13 +1,15 @@
 ---
 # tasks file for roles/transmission
-- name: Install pacakge
-  apt: name=transmission-daemon state=present
+- block:
+  - name: Install pacakge
+    apt: name=transmission-daemon state=present
 
-- name: Put transmission in downloads group
-  user: name=debian-transmission groups={{secondary_groups}} append=yes
-  when: (secondary_groups)
-  notify: restart transmission
+  - name: Put transmission in downloads group
+    user: name=debian-transmission groups={{secondary_groups}} append=yes
+    when: (secondary_groups)
+    notify: restart transmission
 
-- name: Copy transmission config
-  copy: src=transmission.settings.json dest=/etc/transmission-daemon/settings.json owner=debian-transmission group=debian-transmission mode=0600
-  notify: restart transmission
+  - name: Copy transmission config
+    copy: src=transmission.settings.json dest=/etc/transmission-daemon/settings.json owner=debian-transmission group=debian-transmission mode=0600
+    notify: restart transmission
+  tags: transmission
