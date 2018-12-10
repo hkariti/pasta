@@ -1,0 +1,26 @@
+---
+- block:
+  - name: Install duplicati client
+    unarchive: src={{duc_artifact_url}} remote_src=yes dest={{duc_parent_dir}} creates={{ omit if duc_overwrite|bool else duc_install_dir }}
+
+  - name: Link duc executable
+    file: src={{duc_install_dir}}/duplicati_client dest=/usr/bin/duc state=link
+
+  - name: Login to duc
+    command: duc login http://localhost:8200
+
+  - name: Copy backup configs
+    copy: src={{item}} dest=/tmp/{{item}}
+    with_items: "{{ backup_configs }}"
+
+  - name: Import backup configs
+    command: duc create --import-metadata backup /tmp/{{item}}
+    with_items: "{{ backup_configs }}"
+
+  - name: Remove config files
+    file: path=/tmp/{{item}} state=absent
+    with_items: "{{ backup_configs }}"
+  tags:
+    - duplicati_config
+    - duplicati-client
+    - duc

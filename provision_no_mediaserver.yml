@@ -16,4 +16,5 @@
     - role: duplicati
       extra_opts: "--webservice-allowed-hostnames=*"
       group_id: 1006
+    - role: duplicati_config
     - nginx
