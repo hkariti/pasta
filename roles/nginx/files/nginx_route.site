@@ -25,6 +25,9 @@ server {
     location /sickrage {
         return 301 http://$http_host:8081;
     }
+    location /sickchill {
+        return 301 http://$http_host:8081;
+    }
     location /duplicati {
         return 301 http://$http_host:8200;
     }

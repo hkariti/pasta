@@ -1,6 +1,0 @@
----
-# vars file for sickrage
-repo_url:  https://github.com/SickRage/SickRage     
-homedir: /opt/sickrage
-username: sickrage
-group: sickrage

@@ -1,0 +1,31 @@
+---
+# tasks file for sickchill
+- block:
+  - name: Install required packages
+    apt: name=nodejs,python-pip state=present
+
+  - name: Create user
+    user: name={{username}} group={{group}} home={{homedir}} createhome=no
+
+  - name: Create daemon dir
+    file: name={{homedir}} owner={{username}} group={{group}} state=directory
+
+  - name: Git clone
+    git: repo={{repo_url}} dest={{homedir}} accept_hostkey=yes
+    become_user: "{{username}}"
+    notify: restart sickchill
+
+  - name: Install
+    command: pip install -r {{homedir}}/requirements/requirements.txt
+    notify: restart sickchill
+
+  - name: Copy init script
+    command: cp -v {{homedir}}/runscripts/init.systemd /etc/systemd/system/sickchill.service
+    notify: restart sickchill
+
+  - name: Patch group name
+    lineinfile: path=/etc/systemd/system/sickchill.service regexp="Group=sickchill" line="Group={{group}}" state=present
+
+  - name: Enable service
+    service: name=sickchill enabled=yes state=started
+  tags: sickchill

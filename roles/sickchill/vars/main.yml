@@ -1,0 +1,6 @@
+---
+# vars file for sickchill
+repo_url:  https://github.com/SickChill/SickChill     
+homedir: /opt/sickchill
+username: sickchill
+group: sickchill

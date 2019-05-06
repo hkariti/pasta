@@ -1,0 +1,5 @@
+---
+# handlers file for sickchill
+- name: restart sickchill
+  service: name=sickchill enabled=yes state=restarted
+

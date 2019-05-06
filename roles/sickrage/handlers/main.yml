@@ -1,5 +1,0 @@
----
-# handlers file for sickrage
-- name: restart sickrage
-  service: name=sickrage enabled=yes state=restarted
-

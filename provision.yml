@@ -11,7 +11,7 @@
       secondary_groups: "{{ downloads_group }}"
     - role: couchpotato
       group: "{{ downloads_group }}"
-    - role: sickrage
+    - role: sickchill
       group: "{{ downloads_group }}"
     - role: duplicati
       extra_opts: "--webservice-allowed-hostnames=*"
