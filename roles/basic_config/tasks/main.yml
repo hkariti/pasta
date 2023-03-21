@@ -1,12 +1,20 @@
 - name: Install packages
   apt: name={{item}} update_cache=yes state=present
   with_items:
-    - python
+    - python3
     - git
     - vim
     - tmux
     - avahi-daemon
+    - acl
     
+- name: Create logind.conf.d
+  file: path=/etc/systemd/logind.conf.d state=directory
+
 - name: Disable suspend on lid close
-  lineinfile: regexp=HandleLidSwitch= line="HandleLidSwitch=ignore" path=/etc/systemd/logind.conf
+  copy:
+    content: |
+      [Login]
+      HandleLidSwitch=ignore
+    dest: /etc/systemd/logind.conf.d/disable_lid_sleep.conf
   notify: restart logind

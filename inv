@@ -1,1 +1,1 @@
-tv-h    ansible_user=tvh
+tv-h    ansible_user=tvh ansible_remote_tmp=/tmp/ansible/tmp

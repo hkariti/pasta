@@ -1,2 +1,2 @@
 ---
-- include: ../../marvinpinto.plex/handlers/main.yml
+- import_tasks: file=../../marvinpinto.plex/handlers/main.yml
