@@ -13,7 +13,7 @@
     file: path={{install_dir}} state=directory
 
   - name: Download and Install duplicati
-    unarchive: src={{artifact_url}} remote_src=yes dest={{install_dir}} creates={{ omit if upgrade|bool else install_dir }}
+    unarchive: src={{artifact_url}} remote_src=yes dest={{install_dir}} creates={{ omit if upgrade|bool else install_dir + "/Duplicati.Service.exe" }}
     notify: restart duplicati
 
   - name: chmod +x exectuables

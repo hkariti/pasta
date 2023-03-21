@@ -1,4 +1,4 @@
-duc_artifact_url: 'https://github.com/Pectojin/duplicati-client/releases/download/0.3.16_beta/duplicati_client_0.3.16_gnu_linux.zip'
+duc_artifact_url: 'https://github.com/Pectojin/duplicati-client/releases/download/0.6.5_beta/duplicati_client_0.6.5_gnu_linux.zip'
 duc_parent_dir: /opt
 duc_base_name: "{{ duc_artifact_url | basename | splitext | first }}"
 duc_install_dir: "{{duc_parent_dir}}/{{duc_base_name}}"
