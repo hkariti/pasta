@@ -1,2 +1,5 @@
 - name: restart logind
   service: name=systemd-logind state=restarted
+
+- name: reload networkd
+  service: name=systemd-networkd state=reloaded

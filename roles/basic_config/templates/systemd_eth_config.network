@@ -1,0 +1,11 @@
+[Match]
+Name={{eth_interface}}
+
+[Network]
+DHCP=ipv4
+LinkLocalAddressing=ipv6
+MulticastDNS=yes
+
+[DHCP]
+RouteMetric=100
+UseMTU=true

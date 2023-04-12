@@ -5,7 +5,6 @@
     - git
     - vim
     - tmux
-    - avahi-daemon
     - acl
     
 - name: Create logind.conf.d
@@ -18,3 +17,13 @@
       HandleLidSwitch=ignore
     dest: /etc/systemd/logind.conf.d/disable_lid_sleep.conf
   notify: restart logind
+    
+- name: Create network config dir
+  file: path=/etc/systemd/network state=directory
+
+## this may require disabling netplan and its installed networkd config to work
+- name: Enable mDNS for {{ eth_interface }}
+  template:
+    src: systemd_eth_config.network
+    dest: /etc/systemd/network/10-{{eth_interface}}.network
+  notify: reload networkd
