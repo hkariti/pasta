@@ -2,7 +2,7 @@
 # tasks file for sickchill
 - block:
   - name: Install required packages
-    apt: name=nodejs,python-pip state=present
+    apt: name=nodejs,python3-pip,python3-venv state=present
 
   - name: Create user
     user: name={{username}} group={{group}} home={{homedir}} createhome=no
@@ -10,17 +10,21 @@
   - name: Create daemon dir
     file: name={{homedir}} owner={{username}} group={{group}} state=directory
 
-  - name: Git clone
-    git: repo={{repo_url}} dest={{homedir}} accept_hostkey=yes
+  - name: Create venv
+    command: python3 -m venv {{homedir}}
     become_user: "{{username}}"
-    notify: restart sickchill
 
   - name: Install
-    command: pip install -r {{homedir}}/requirements/requirements.txt
-    notify: restart sickchill
+    pip:
+      virtualenv: "{{homedir}}"
+      state: present
+      name: sickchill
+    become_user: "{{username}}"
 
   - name: Copy init script
-    command: cp -v {{homedir}}/runscripts/init.systemd /etc/systemd/system/sickchill.service
+    get_url:
+      url: https://raw.githubusercontent.com/SickChill/sickchill/master/contrib/runscripts/init.systemd
+      dest: /etc/systemd/system/sickchill.service
     notify: restart sickchill
 
   - name: Patch group name
