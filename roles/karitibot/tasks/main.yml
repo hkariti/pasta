@@ -1,0 +1,24 @@
+- block:
+  - name: Create user
+    user: name=karitibot state=present
+    become: true
+
+  - name: Clone repo
+    git:
+      repo: git@github.com:hkariti/BotFersal
+      dest: ~karitibot/BotFersal
+      version: reminder
+    become: true
+    become_user: karitibot
+
+  - name: Copy appSettings
+    copy:
+      src: appSettings.py
+      dest: ~karitibot/BotFersal/appSettings.py
+    become: true
+    become_user: karitibot
+
+  - name: Set cron
+    copy: src=shufersal.cron dest=/etc.cron.d/shufersal
+    become: true
+  tags: karitibot, botfersal

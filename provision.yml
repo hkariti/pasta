@@ -23,3 +23,4 @@
       extra_groups: "{{ downloads_group }}"
       tags: plex,plex_config
     - nginx
+    - karitibot

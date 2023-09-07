@@ -1,0 +1,2 @@
+
+0 21 * * 0-4 karitibot /home/karitibot/BotFersal/.venv/bin/python /home/karitibot/BotFersal/simple_message.py 5787509416 'לא לשכוח לקנות קופון לשופרסל!'
