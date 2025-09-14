@@ -1,0 +1,32 @@
+---
+- name: Install package
+  apt:
+    name: inadyn
+    state: present
+  become: true
+
+- name: Configure inadyn
+  copy:
+    src: inadyn.conf
+    dest: /etc/inadyn/inadyn.conf
+    mode: 0640
+  become: true
+
+- name: Install systemd service override
+  copy:
+    src: inadyn_override.service
+    dest: /etc/systemd/system/inadyn.service.d/override.conf
+    mode: 0644
+  become: true
+  register: install_override
+
+
+- name: Daemon reload
+  systemd:
+    daemon_reload: true
+  when: install_override.changed
+
+- name: Start inadyn
+  service:
+    name: inadyn
+    state: started
