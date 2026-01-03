@@ -1,0 +1,27 @@
+- name: Install wireguard
+  apt:
+    name: wireguard
+    state: present
+  become: true
+
+- name: Configure wg0 interface
+  copy:
+    src: "{{item}}"
+    dest: /etc/wireguard/{{item}}
+    mode: preserve
+    owner: root
+    group: root
+  with_items:
+    - wg0.conf
+    - public_key
+    - private_key
+  notify: Reload wg0 interface
+  become: true
+
+- name: Bring up wg0 interface
+  service:
+    name: wg-quick@wg0
+    state: started
+    enabled: true
+  become: true
+

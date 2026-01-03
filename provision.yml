@@ -25,3 +25,7 @@
     - nginx
     - karitibot
     - inadyn
+    - role: nftables
+      tags: firewall,iptables,nftables,wireguard
+    - role: wireguard
+      tags: wireguard

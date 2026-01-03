@@ -1,0 +1,9 @@
+- name: Copy nftables configuration
+  copy:
+    src: nftables.conf
+    dest: /etc/nftables.conf
+    owner: root
+    group: root
+    mode: 0640
+  become: true
+  notify: Reload nftables
