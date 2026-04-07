@@ -5,16 +5,12 @@
   become: true
 
 - name: Configure wg0 interface
-  copy:
-    src: "{{item}}"
-    dest: /etc/wireguard/{{item}}
-    mode: preserve
+  template:
+    src: wg0.conf.j2
+    dest: /etc/wireguard/wg0.conf
+    mode: 0600
     owner: root
     group: root
-  with_items:
-    - wg0.conf
-    - public_key
-    - private_key
   notify: Reload wg0 interface
   become: true
 
