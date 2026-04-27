@@ -14,7 +14,7 @@
     - role: sickchill
       group: "{{ downloads_group }}"
     - role: duplicati
-      extra_opts: "--webservice-allowed-hostnames=*"
+      extra_opts: "--webservice-allowed-hostnames=tv-h --server-datafolder {{homedir}}/.config/Duplicati"
       group_id: 1006
     - role: duplicati_config
     - role: marvinpinto.plex

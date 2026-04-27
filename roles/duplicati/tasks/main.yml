@@ -1,39 +1,29 @@
 ---
 - block:
-  - name: Install requires packages
-    apt: name=unzip state=present
-
   - name: Create group
     group: name={{group}} gid={{group_id or omit}}
 
   - name: Create user
     user: name={{username}} uid={{user_id or omit}} group={{group}} home={{homedir}} createhome=yes
 
-  - name: Create install dir
-    file: path={{install_dir}} state=directory
-
-  - name: Download and Install duplicati
-    unarchive: src={{artifact_url}} remote_src=yes dest={{install_dir}} creates={{ omit if upgrade|bool else install_dir + "/Duplicati.Service.exe" }}
+  - name: Downoad and install duplicati
+    apt: deb={{artifact_url}} state=present
     notify: restart duplicati
+      
+  - name: Ensure drop-in directory of systemd service is created
+    file:
+      path: /etc/systemd/system/duplicati.service.d/
+      state: directory
+      mode: '0755'
 
-  - name: chmod +x exectuables
-    shell: find "{{install_dir}}" -name '*.sh' -o -name '*.exe' | xargs chmod a+x
-    notify: restart duplicati
-
-  - name: Install cli executables
-    template: src={{item}} dest=/usr/bin/{{item|splitext|first}} mode=0755
-    with_items:
-      - duplicati-server.j2
-      - duplicati-cli.j2
+  - name: copy systemd drop-in
+    template: src=systemd-nonroot.conf.j2 dest=/etc/systemd/system/duplicati.service.d/nonroot.conf
 
   - name: copy config
     template: src=duplicati-config.j2 dest=/etc/default/duplicati
     notify: restart duplicati
 
-  - name: copy systemd service
-    copy: src=duplicati@.service dest=/etc/systemd/system/
-    notify: restart duplicati
-
   - name: Start duplicati
-    service: name=duplicati@{{username}} state=started enabled=yes
+    systemd_service: name=duplicati state=started enabled=yes daemon_reload=yes
   tags: duplicati
+  become: true

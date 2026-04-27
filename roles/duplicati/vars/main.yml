@@ -5,9 +5,7 @@ group: duplicati
 group_id: 0 # Dont override gid by default
 homedir: /var/lib/duplicati
 
-artifact_url: "https://github.com/duplicati/duplicati/releases/download/v2.0.6.3-2.0.6.3_beta_2021-06-17/duplicati-2.0.6.3_beta_2021-06-17.zip"
-install_dir: /usr/lib/duplicati
-upgrade: false
+artifact_url: "https://github.com/duplicati/duplicati/releases/download/v2.3.0.1_stable_2026-04-24/duplicati-2.3.0.1_stable_2026-04-24-linux-x64-cli.deb"
 
 listen_port: 8200
 listen_interface: any
